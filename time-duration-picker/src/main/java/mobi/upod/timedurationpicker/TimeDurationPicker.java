@@ -459,7 +459,7 @@ public class TimeDurationPicker extends FrameLayout {
      */
     private static class TimeDurationString {
         private int timeUnits;
-        private int maxDigits = 6;
+        private int maxDigits = 8;
         private long duration = 0;
         private final StringBuilder input = new StringBuilder(maxDigits);
 
@@ -474,9 +474,9 @@ public class TimeDurationPicker extends FrameLayout {
 
         private void setMaxDigits(int timeUnits) {
             if (timeUnits == TimeDurationPicker.HH_MM_SS)
-                maxDigits = 6;
+                maxDigits = 8;
             else
-                maxDigits = 4;
+                maxDigits = 6;
             setDuration(duration);
         }
 
@@ -508,18 +508,18 @@ public class TimeDurationPicker extends FrameLayout {
         }
 
         public String getHoursString() {
-            return timeUnits == HH_MM_SS || timeUnits == HH_MM ? input.substring(0, 2) : "00";
+            return timeUnits == HH_MM_SS || timeUnits == HH_MM ? input.substring(0, 4) : "0000";
         }
 
         public String getMinutesString() {
-            if (timeUnits == HH_MM_SS || timeUnits == HH_MM) return input.substring(2, 4);
+            if (timeUnits == HH_MM_SS || timeUnits == HH_MM) return input.substring(4, 6);
             else if (timeUnits == MM_SS) return input.substring(0, 2);
             else return "00";
         }
 
         public String getSecondsString() {
-            if (timeUnits == HH_MM_SS) return input.substring(4, 6);
-            else if (timeUnits == MM_SS) return input.substring(2, 4);
+            if (timeUnits == HH_MM_SS) return input.substring(6, 8);
+            else if (timeUnits == MM_SS) return input.substring(4, 6);
             else return "00";
         }
 
@@ -543,10 +543,7 @@ public class TimeDurationPicker extends FrameLayout {
         }
 
         private void setDuration(long hours, long minutes, long seconds) {
-            if (hours > 99 || minutes > 99)
-                setDurationString("99", "99", "99");
-            else
-                setDurationString(stringFragment(hours), stringFragment(minutes), stringFragment(seconds));
+            setDurationString(stringHoursFragment(hours), stringFragment(minutes), stringFragment(seconds));
         }
 
         private void setDurationString(String hours, String minutes, String seconds) {
@@ -570,6 +567,10 @@ public class TimeDurationPicker extends FrameLayout {
 
         private String stringFragment(long value) {
             return (value < 10 ? "0" : "") + Long.toString(value);
+        }
+
+        private String stringHoursFragment(long value) {
+            return String.format("%04d", value);
         }
     }
 
